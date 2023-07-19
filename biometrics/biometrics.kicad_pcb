@@ -124773,6 +124773,67 @@
   (segment (start 130.0717 78.8143) (end 146.0024 78.8143) (width 0.2) (layer "F.Cu") (net 14) (tstamp e73222b5-3eba-43b9-8bae-c728451d9666))
   (segment (start 123.49 85.396) (end 130.0717 78.8143) (width 0.2) (layer "F.Cu") (net 14) (tstamp f478a85f-19ee-468c-b460-7534d026588c))
 
+  (group "" (id aef44a3a-4db7-481f-9556-4b2e9096f061)
+    (members
+      0177faf0-aa48-4fb6-8f3f-b304915b87c0
+      020c4302-607a-4a1d-bff0-ebe56fd20a78
+      032f86f1-251e-4333-ab8c-c9a2091317bf
+      074a7927-eaad-4781-a889-078e83e2b3c4
+      091131c5-421d-4033-8962-d74dc319b8f2
+      0a89030d-2b81-48e0-acde-b5cde86b9ead
+      10029038-63cc-4d15-8432-0a1081e3edd6
+      120a29d6-1071-4399-b4fe-be4bfe13c76c
+      1d42fcaa-a1e8-4b84-8f89-fccf0f9705b3
+      1f7b37d0-7269-4d2a-ab69-ec8bb52b5525
+      2411c2b1-37f5-4761-b19c-963652a94b3e
+      2bec793e-80a7-422e-ba8b-1f20c1ca36df
+      2dd03244-0c74-4f02-b258-5ce94b0dd0bc
+      36841561-9c49-433e-ab3d-d8cad65ae6e6
+      37ed7724-287c-4cd9-97ff-55e8bd25063f
+      3bc2d2f2-6897-4d61-afb9-570928891b19
+      40774a05-87d2-428c-be96-c6689297279a
+      4230267f-cec2-4e7b-a529-5c3d0639bcd2
+      42790f87-06ff-4b8c-9158-fdbcdd1d4a33
+      4717f320-d35f-417b-9747-5e684cf3b9e9
+      4d1e4bb3-3dd0-4436-af06-ddbbab3f3151
+      56de699f-6cce-48b7-a571-f924587d516c
+      590a948a-5dad-427a-b9ef-8a52cc51749e
+      61365527-66b7-486d-98c9-130867d470d4
+      68b235ae-1cce-48bc-9d3a-c9808fe8628d
+      6d95da52-9086-43ce-815a-0eb5aba4f3d9
+      781585e6-02f9-497f-ba54-6e910266b1ad
+      7c9b96b0-2b83-473c-ae6b-6fa507a00c74
+      958d7cfc-f165-490f-9b54-dba27d17525e
+      979712d5-bd6c-4f1f-b78d-6f66b32feb2e
+      9cecb8c4-604a-4686-a782-a065e331ccc6
+      9e6014d9-785f-4102-b713-5b15e0e4ceb0
+      a2ef0e21-4b73-40b9-a899-49ff09176627
+      aa571a41-c409-48aa-b047-d5b46fe46333
+      aaf94297-2678-4955-963a-069937d6792b
+      acf072ab-14d8-4933-8bb6-3f6b5084079c
+      ae13e5ec-7769-43fe-9de0-a19641578383
+      b5a9a4d2-96bb-4c45-b4ae-5e7f7e38fe8f
+      bc69e573-83cd-41ea-a63b-dbad41cb9002
+      be075e1b-8704-4fcd-9353-a2fed18189c1
+      be34944a-ce68-427b-a4c9-0f846230a9bc
+      bf8bef06-c078-4908-a2a6-fcf3a6c1aa00
+      c108d1cb-8507-4c6e-8068-b7b8fbb383b8
+      c24b2174-8c9b-483e-8749-c7334e0e0ed5
+      c267cdae-f129-49e9-8621-50886e81f51a
+      c4795d7a-4810-4dda-bd17-47ceafc5ce39
+      c4b06b1e-fa23-48ed-b58e-18320b01e303
+      c5d59128-dc5d-44e5-aca8-5c03f0308865
+      c709b979-94eb-404e-b691-bb46df7956b8
+      ce79683f-d241-4b89-967a-5372c046ded1
+      d64d6b6d-65b5-479f-941c-dcdd3fa02e57
+      d7eeed29-9268-4dad-bf3c-dea90f7ee27b
+      de29b7a0-d419-407f-97bd-e02b8890e003
+      e73222b5-3eba-43b9-8bae-c728451d9666
+      efd26e59-db06-4ace-96eb-e956192279f8
+      f478a85f-19ee-468c-b460-7534d026588c
+      fa6e827a-98d7-48d3-a4d8-1bf9cf57b70e
+    )
+  )
   (group "" (id 020c4302-607a-4a1d-bff0-ebe56fd20a78)
     (members
       72f980c2-3a13-49d3-bf34-956b7a3b46bb
