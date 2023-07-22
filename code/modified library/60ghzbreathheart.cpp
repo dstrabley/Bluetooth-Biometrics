@@ -24,17 +24,17 @@ void BreathHeart_60GHz::recvRadarBytes(){
 //Radar transmits data frames for display via serial port
 void BreathHeart_60GHz::showData(){
   if(this->newData){
-    // Serial.print(MESSAGE_HEAD1, HEX);
-    // Serial.print(' ');
-    // Serial.print(MESSAGE_HEAD2, HEX);
-    // Serial.print(' ');
+    Serial.print(MESSAGE_HEAD1, HEX);
+    Serial.print(' ');
+    Serial.print(MESSAGE_HEAD2, HEX);
+    Serial.print(' ');
     char charVal[4];
     for (byte n = 0; n < dataLen+1; n++) {
       sprintf(charVal, "%02X", Msg[n]);
-      // Serial.print(charVal);
-      // Serial.print(' ');
+      Serial.print(charVal);
+      Serial.print(' ');
     }
-    //Serial.println();
+    Serial.println();
     this->newData = false;
     Msg[dataLen] = {0};
   }

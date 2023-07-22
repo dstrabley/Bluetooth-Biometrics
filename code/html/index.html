@@ -1,21 +1,61 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Heart Rate Monitor</title>
+    <title>biometrics.danielstrabley.com</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
     <script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="icon" href="https://www.danielstrabley.com/wp-content/uploads/2022/09/favicon.png" type="image/png">
     <style>
-      .ct-series-a .ct-point, .ct-series-b .ct-point {
+      .ct-series-a .ct-point,
+      .ct-series-b .ct-point,
+      .ct-series-c .ct-point {
         stroke-width: 0px;
       }
+
       .ct-series-a .ct-line {
-        stroke: red;
-        stroke-width: 2px;
+        stroke: #ff3b30;
+        stroke-width: 3px;
       }
+
       .ct-series-b .ct-line {
-        stroke: blue;
+        stroke: #007aff;
+        stroke-width: 3px;
+      }
+
+      .ct-series-c .ct-line {
+        stroke: #fecb2e9;
         stroke-width: 2px;
+        stroke-dasharray: 8;
+      }
+
+      .ct-chart-container {
+        width: 100%;
+      }
+
+      #consoleLog {
+        color: #33FF00;
+        background-color: #000000;
+        font-family: 'Courier New', Courier, monospace;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+        opacity: .75;
+        overflow: auto;
+        white-space: pre-wrap;
+        height: 150px;
+      }
+      .bi {
+        font-size: 28px;
+        margin-right: 5px;
+        margin-top: -20px;
+      }
+      .logo {
+        display:inline-block;
+        height:15px;
+        margin-right:15px;
+        width:15px;
       }
     </style>
   </head>
@@ -29,45 +69,86 @@
           <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="sm:flex sm:items-start">
               <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                  Disclaimer
-                </h3>
+                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Disclaimer </h3>
                 <div class="mt-2">
-                  <p class="text-sm text-gray-500">
-                    Yo, this project is an exmaple of advanced prototyping using AI. The sensor we're using here, well... it's a piece of shit. The results you're seeing are about as accurate as they can be, so take it with a grain of salt, all-right?
-
-                  </p>
+                  <p class="text-sm text-gray-500"> This project is an exmaple of advanced prototyping using AI. The sensor we're using here, well... it's a piece of shit. The results you're seeing are about as accurate as they can be, so take it with a grain of salt, all-right? </p>
                 </div>
               </div>
             </div>
           </div>
           <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <button id="modalButton" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-              Yeah, I get it.
-            </button>
+            <button id="modalButton" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"> Yeah, I get it. </button>
           </div>
         </div>
       </div>
     </div>
     <div class="container mx-auto">
       <div class="flex items-center justify-between mb-6">
-        <h1 class="text-xl font-bold text-gray-700">Heart Rate Monitor</h1>
-        <button id="pairButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Connect with Heart Rate Monitor</button>
+        <h1 class="text-xl font-bold text-gray-700"><a class="logo bg-gray-700" href="https://www.danielstrabley.com"></a>biometrics.danielstrabley.com</h1>
+        <button id="pairButton" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Connect to Sensor</button>
       </div>
-      <div class="grid grid-cols-3 gap-4">
-        <div class="col-span-2 bg-white p-6 rounded shadow">
-          <div class="ct-chart"></div>
-        </div>
+      <div class="container mx-auto grid grid-cols-1 gap-4">
         <div class="bg-white p-6 rounded shadow">
-          <h2 class="mb-4 text-lg font-bold text-gray-700">Current Readings</h2>
-          <p id="heartRateDisplay" class="text-gray-500">No heart rate data yet.</p>
-          <p id="breathRateDisplay" class="text-gray-500">No breath rate data yet.</p>
-          <h2 class="mt-6 mb-4 text-lg font-bold text-gray-700">Console Log</h2>
+          <div class="ct-chart-container">
+            <div class="ct-chart"></div>
+          </div>
+        </div>
+          <div class="grid grid-cols-4 gap-4">
+              <div class="col-span-1">
+                  <div class="bg-white rounded shadow p-4 flex items-center space-x-2 text-gray-500">
+                      <i class="bi bi-activity"></i>
+                      <div>
+                          <h1 class="text-xl font-bold text-gray-700" id="heartRateDisplay">N/A</h1>
+                          <p class="text-xs">Heart Rate</p>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-span-1">
+                  <div class="bg-white rounded shadow p-4 flex items-center space-x-2 text-gray-500">
+                      <i class="bi bi-lungs"></i>
+                      <div>
+                          <h1 class="text-xl font-bold text-gray-700" id="breathRateDisplay">N/A</h1>
+                          <p class="text-xs">Respiratory Rate</p>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-span-1">
+                  <div class="bg-white rounded shadow p-4 flex items-center space-x-2 text-gray-500">
+                      <i class="bi bi-arrows-expand"></i>
+                      <div>
+                          <h1 class="text-xl font-bold text-gray-700" id="distanceDisplay">N/A</h1>
+                          <p class="text-xs">Distance from Sensor</p>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-span-1">
+                  <div class="bg-white rounded shadow p-4 flex items-center space-x-2 text-gray-500">
+                      <i class="bi bi-clock-history"></i>
+                      <div>
+                          <h1 class="text-xl font-bold text-gray-700" id="lastReadingDisplay">N/A</h1>
+                          <p class="text-xs">Last Reading</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      
+      
+        <div class="">
           <p id="consoleLog" class="text-sm text-gray-500"></p>
         </div>
       </div>
     </div>
-
+    <footer class="text-xs text-center text-gray-700 p-4 mt-8" style="margin-top:10px;">
+      <p class="font-bold" style="margin-bottom:4px">It should go without saying, but this is nowhere near a real medical device...</p>
+      <p>This project was written using 
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://chat.openai.com/">chatGPT</a> / 
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://tailwindui.com/">TailwindUI</a> / and 
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://gionkunz.github.io/chartist-js/">Chartist.js</a>
+        with hardware from 
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://store-usa.arduino.cc/products/arduino-nano-33-iot">Arduino</a> and 
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://www.seeedstudio.com/60GHz-mmWave-Radar-Sensor-Breathing-and-Heartbeat-Module-p-5305.html">SeeedStudio</a>.
+      </p>
+    </footer>
     <script>
       // When the user clicks on the "Understood" button, close the modal
       document.getElementById('modalButton').addEventListener('click', function() {
@@ -81,15 +162,15 @@
         consoleLogParagraph.innerText += `${message}\n`;
         // Scroll to the bottom of the log
         consoleLogParagraph.scrollTop = consoleLogParagraph.scrollHeight;
-      }
-      
-
-      // Set up Chartist.js
+      };
       var chart = new Chartist.Line('.ct-chart', {
-        series: [[0], [0]],
+        series: [
+          [0], // Heart Rate
+          [0], // Breath Rate
+          [0]  // Distance
+        ],
       }, {
-        width: 800,
-        height: 400,
+        height: 300,
         showPoint: true,
         axisX: {
           showGrid: true,
@@ -103,90 +184,121 @@
           high: 120,
         },
       });
-
-      var device, server;
+      var device, server, heartRateCharacteristic, breathRateCharacteristic, distanceCharacteristic;
       var pairButton = document.querySelector('#pairButton');
       pairButton.addEventListener('click', function() {
         if (!navigator.bluetooth) {
           console.log('Web Bluetooth is not available!');
           return;
         }
-
-        if (pairButton.textContent === "Disconnect from Heart Rate Monitor") {
+        if (pairButton.textContent === "Disconnect from Sensor") {
           if (device) {
             console.log('Disconnecting from GATT Server...');
             device.gatt.disconnect();
             console.log('Disconnected from GATT Server');
-            pairButton.textContent = "Connect with Heart Rate Monitor";
+            pairButton.textContent = "Connect to Sensor";
           }
           return;
         }
-
         let myServiceUUID = '19b10000-e8f2-537e-4f6c-d104768a1214';
         let myHeartRateCharacteristicUUID = '19b10001-e8f2-537e-4f6c-d104768a1214';
         let myBreathRateCharacteristicUUID = '19b10002-e8f2-537e-4f6c-d104768a1214';
-
+        let myDistanceCharacteristicUUID = '19b10003-e8f2-537e-4f6c-d104768a1214';
         console.log('Requesting Bluetooth Device...');
         navigator.bluetooth.requestDevice({
-          filters: [{services: [myServiceUUID]}]
-        })
-        .then(dev => {
+          filters: [{
+            services: [myServiceUUID]
+          }]
+        }).then(dev => {
           device = dev;
           console.log('Connecting to GATT Server...');
           return device.gatt.connect();
-        })
-        .then(serv => {
+        }).then(serv => {
           server = serv;
           console.log('Getting Service...');
           return server.getPrimaryService(myServiceUUID);
-        })
-        .then(service => {
+        }).then(service => {
           console.log('Getting Heart Rate Characteristic...');
-          return service.getCharacteristic(myHeartRateCharacteristicUUID).then(characteristic => {
-            return {service: service, characteristic: characteristic};
+          return service.getCharacteristic(myHeartRateCharacteristicUUID).then(char => {
+            heartRateCharacteristic = char;
+            return service;
           });
-        })
-        .then(obj => {
-          let service = obj.service;
-          let characteristic = obj.characteristic;
-          console.log('Reading Heart Rate Characteristic...');
-          characteristic.startNotifications();
-          characteristic.addEventListener('characteristicvaluechanged', (event) => {
-            let heartRate = event.target.value.getInt8(0);
-            document.querySelector('#heartRateDisplay').textContent = `Heart Rate: ${heartRate}`;
+        }).then(service => {
+          console.log('Getting Breath Rate Characteristic...');
+          return service.getCharacteristic(myBreathRateCharacteristicUUID).then(char => {
+            breathRateCharacteristic = char;
+            return service;
+          });
+        }).then(service => {
+          console.log('Getting Distance Characteristic...');
+          return service.getCharacteristic(myDistanceCharacteristicUUID).then(char => {
+            distanceCharacteristic = char;
+            return startNotifications();
+          });
+        }).catch(error => {
+          console.log('Error: ' + error);
+          pairButton.textContent = "Connect with Heart Rate Monitor";
+        });
 
+        function startNotifications() {
+          console.log('Reading Heart Rate Characteristic...');
+          heartRateCharacteristic.startNotifications();
+          heartRateCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
+            let heartRate = event.target.value.getUint8(0);
+            document.querySelector('#heartRateDisplay').textContent = `${heartRate} BPM`;
             // Add new heart rate value to chart and update
             var data = chart.data.series[0];
             data.push(heartRate);
             // Keep only the last 50 data points
             if (data.length > 50) data.shift();
             chart.update();
+            updateLastReadingTime();
           });
-
-          pairButton.textContent = "Disconnect from Heart Rate Monitor";
-
-          console.log('Getting Breath Rate Characteristic...');
-          return service.getCharacteristic(myBreathRateCharacteristicUUID);
-        })
-        .then(characteristic => {
           console.log('Reading Breath Rate Characteristic...');
-          characteristic.startNotifications();
-          characteristic.addEventListener('characteristicvaluechanged', (event) => {
-            let breathRate = event.target.value.getInt8(0);
-            document.querySelector('#breathRateDisplay').textContent = `Breath Rate: ${breathRate}`;
-
+          breathRateCharacteristic.startNotifications();
+          breathRateCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
+            let breathRate = event.target.value.getUint8(0);
+            document.querySelector('#breathRateDisplay').textContent = `${breathRate} RR`;
             // Add new breath rate value to chart and update
             var data = chart.data.series[1];
             data.push(breathRate);
             // Keep only the last 50 data points
             if (data.length > 50) data.shift();
             chart.update();
+            updateLastReadingTime();
           });
-        })
-        .catch(error => {
-          console.log('Error: ' + error);
-          pairButton.textContent = "Connect with Heart Rate Monitor";
-        });
+          console.log('Reading Distance Characteristic...');
+          distanceCharacteristic.startNotifications();
+          distanceCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
+            let distance = event.target.value.getUint8(0);
+            document.querySelector('#distanceDisplay').textContent = `${distance} in`;
+            
+            // Add new distance value to chart and update
+            var data = chart.data.series[2]; // Index 2 for the third series (0-indexed)
+            data.push(distance);
+            // Keep only the last 50 data points
+            if (data.length > 50) data.shift();
+            chart.update();
+            
+            updateLastReadingTime();
+          });
+          pairButton.textContent = "Disconnect from Sensor";
+        }
+
+        function updateLastReadingTime() {
+          let now = new Date();
+          let hours = now.getHours();
+          let minutes = now.getMinutes().toString().padStart(2, '0');
+          let seconds = now.getSeconds().toString().padStart(2, '0');
+
+          let ampm = hours >= 12 ? 'PM' : 'AM';
+          hours = hours % 12;
+          hours = hours ? hours : 12; // the hour '0' should be '12'
+          hours = hours.toString().padStart(2, '0'); // leading 0, if needed
+
+          let time = `${hours}:${minutes}:${seconds} ${ampm}`;
+          document.querySelector('#lastReadingDisplay').textContent = `${time}`;
+        }
       });
     </script>
   </body>

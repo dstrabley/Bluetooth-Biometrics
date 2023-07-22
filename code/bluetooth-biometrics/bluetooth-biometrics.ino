@@ -50,7 +50,7 @@ void loop() {
             Serial.println(radar.breath_rate, DEC);
             breathRateChar.writeValue(radar.breath_rate);
             break;
-        }
+        } 
       }
       delay(200);
     }
