@@ -2,47 +2,190 @@
 <html>
   <head>
     <title>Heart Rate Monitor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+      .ct-series-a .ct-point, .ct-series-b .ct-point {
+        stroke-width: 0px;
+      }
+      .ct-series-a .ct-line {
+        stroke: red;
+        stroke-width: 2px;
+      }
+      .ct-series-b .ct-line {
+        stroke: blue;
+        stroke-width: 2px;
+      }
+    </style>
   </head>
-  <body>
-    <button id="pairButton">Pair with Heart Rate Monitor</button>
-    <p id="heartRateDisplay">No data yet.</p>
+  <body class="bg-gray-100 p-6">
+    <!-- The modal -->
+    <div id="myModal" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                  Disclaimer
+                </h3>
+                <div class="mt-2">
+                  <p class="text-sm text-gray-500">
+                    Yo, this project is an exmaple of advanced prototyping using AI. The sensor we're using here, well... it's a piece of shit. The results you're seeing are about as accurate as they can be, so take it with a grain of salt, all-right?
+
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <button id="modalButton" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+              Yeah, I get it.
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container mx-auto">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-xl font-bold text-gray-700">Heart Rate Monitor</h1>
+        <button id="pairButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Connect with Heart Rate Monitor</button>
+      </div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="col-span-2 bg-white p-6 rounded shadow">
+          <div class="ct-chart"></div>
+        </div>
+        <div class="bg-white p-6 rounded shadow">
+          <h2 class="mb-4 text-lg font-bold text-gray-700">Current Readings</h2>
+          <p id="heartRateDisplay" class="text-gray-500">No heart rate data yet.</p>
+          <p id="breathRateDisplay" class="text-gray-500">No breath rate data yet.</p>
+          <h2 class="mt-6 mb-4 text-lg font-bold text-gray-700">Console Log</h2>
+          <p id="consoleLog" class="text-sm text-gray-500"></p>
+        </div>
+      </div>
+    </div>
 
     <script>
-      document.querySelector('#pairButton').addEventListener('click', function() {
+      // When the user clicks on the "Understood" button, close the modal
+      document.getElementById('modalButton').addEventListener('click', function() {
+        document.getElementById('myModal').style.display = "none";
+      });
+      // Override console.log to display on the page
+      let originalLog = console.log;
+      console.log = function(message) {
+        originalLog(message);
+        let consoleLogParagraph = document.getElementById('consoleLog');
+        consoleLogParagraph.innerText += `${message}\n`;
+        // Scroll to the bottom of the log
+        consoleLogParagraph.scrollTop = consoleLogParagraph.scrollHeight;
+      }
+      
+
+      // Set up Chartist.js
+      var chart = new Chartist.Line('.ct-chart', {
+        series: [[0], [0]],
+      }, {
+        width: 800,
+        height: 400,
+        showPoint: true,
+        axisX: {
+          showGrid: true,
+          labelInterpolationFnc: function(value, index) {
+            return index % 10 === 0 ? `Index ${value}` : null;
+          },
+        },
+        axisY: {
+          onlyInteger: true,
+          low: 0,
+          high: 120,
+        },
+      });
+
+      var device, server;
+      var pairButton = document.querySelector('#pairButton');
+      pairButton.addEventListener('click', function() {
         if (!navigator.bluetooth) {
           console.log('Web Bluetooth is not available!');
           return;
         }
 
+        if (pairButton.textContent === "Disconnect from Heart Rate Monitor") {
+          if (device) {
+            console.log('Disconnecting from GATT Server...');
+            device.gatt.disconnect();
+            console.log('Disconnected from GATT Server');
+            pairButton.textContent = "Connect with Heart Rate Monitor";
+          }
+          return;
+        }
+
         let myServiceUUID = '19b10000-e8f2-537e-4f6c-d104768a1214';
-        let myCharacteristicUUID = '19b10001-e8f2-537e-4f6c-d104768a1214';
+        let myHeartRateCharacteristicUUID = '19b10001-e8f2-537e-4f6c-d104768a1214';
+        let myBreathRateCharacteristicUUID = '19b10002-e8f2-537e-4f6c-d104768a1214';
 
         console.log('Requesting Bluetooth Device...');
         navigator.bluetooth.requestDevice({
           filters: [{services: [myServiceUUID]}]
         })
-        .then(device => {
+        .then(dev => {
+          device = dev;
           console.log('Connecting to GATT Server...');
           return device.gatt.connect();
         })
-        .then(server => {
+        .then(serv => {
+          server = serv;
           console.log('Getting Service...');
           return server.getPrimaryService(myServiceUUID);
         })
         .then(service => {
-          console.log('Getting Characteristic...');
-          return service.getCharacteristic(myCharacteristicUUID);
+          console.log('Getting Heart Rate Characteristic...');
+          return service.getCharacteristic(myHeartRateCharacteristicUUID).then(characteristic => {
+            return {service: service, characteristic: characteristic};
+          });
         })
-        .then(characteristic => {
-          console.log('Reading Characteristic...');
+        .then(obj => {
+          let service = obj.service;
+          let characteristic = obj.characteristic;
+          console.log('Reading Heart Rate Characteristic...');
           characteristic.startNotifications();
           characteristic.addEventListener('characteristicvaluechanged', (event) => {
             let heartRate = event.target.value.getInt8(0);
             document.querySelector('#heartRateDisplay').textContent = `Heart Rate: ${heartRate}`;
+
+            // Add new heart rate value to chart and update
+            var data = chart.data.series[0];
+            data.push(heartRate);
+            // Keep only the last 50 data points
+            if (data.length > 50) data.shift();
+            chart.update();
+          });
+
+          pairButton.textContent = "Disconnect from Heart Rate Monitor";
+
+          console.log('Getting Breath Rate Characteristic...');
+          return service.getCharacteristic(myBreathRateCharacteristicUUID);
+        })
+        .then(characteristic => {
+          console.log('Reading Breath Rate Characteristic...');
+          characteristic.startNotifications();
+          characteristic.addEventListener('characteristicvaluechanged', (event) => {
+            let breathRate = event.target.value.getInt8(0);
+            document.querySelector('#breathRateDisplay').textContent = `Breath Rate: ${breathRate}`;
+
+            // Add new breath rate value to chart and update
+            var data = chart.data.series[1];
+            data.push(breathRate);
+            // Keep only the last 50 data points
+            if (data.length > 50) data.shift();
+            chart.update();
           });
         })
         .catch(error => {
           console.log('Error: ' + error);
+          pairButton.textContent = "Connect with Heart Rate Monitor";
         });
       });
     </script>

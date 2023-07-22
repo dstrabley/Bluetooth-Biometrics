@@ -5,6 +5,7 @@
 // Define custom 128-bit UUIDs
 BLEService heartRateService("19b10000-e8f2-537e-4f6c-d104768a1214");
 BLEIntCharacteristic heartRateChar("19b10001-e8f2-537e-4f6c-d104768a1214", BLERead | BLENotify);
+BLEIntCharacteristic breathRateChar("19b10002-e8f2-537e-4f6c-d104768a1214", BLERead | BLENotify); // New Characteristic for breath rate
 
 // Instantiate the heart rate monitor
 BreathHeart_60GHz radar = BreathHeart_60GHz(&Serial1);
@@ -17,9 +18,6 @@ void setup() {
 
   Serial.println("Ready");
 
-  // radar.ModeSelect_fuc(1);  //1: indicates real-time transmission mode, 2: indicates sleep state mode.
-  //After setting the mode, if you do not see data returned, you may need to re-power the sensor.
-  
   if (!BLE.begin()) {
     Serial.println("starting BLE failed!");
     while (1);
@@ -28,14 +26,16 @@ void setup() {
   BLE.setLocalName("Heart Rate Monitor");
   BLE.setAdvertisedService(heartRateService);
   heartRateService.addCharacteristic(heartRateChar);
+  heartRateService.addCharacteristic(breathRateChar); // Added breath rate to the service
   BLE.addService(heartRateService);
 
   heartRateChar.writeValue(0);
+  breathRateChar.writeValue(0); // Initialize breath rate
 
   BLE.advertise();
 }
 
-void loop() {60
+void loop() {
   BLEDevice central = BLE.central();
   if (central) {
     while (central.connected()) {
@@ -44,7 +44,11 @@ void loop() {60
         switch(radar.sensor_report){
           case HEARTRATEVAL:
             Serial.println(radar.heart_rate, DEC);
-            heartRateChar.writeValue(radar.heart_rate); 
+            heartRateChar.writeValue(radar.heart_rate);
+            break;
+          case BREATHVAL: // Added case for breath rate
+            Serial.println(radar.breath_rate, DEC);
+            breathRateChar.writeValue(radar.breath_rate);
             break;
         }
       }
@@ -57,6 +61,10 @@ void loop() {60
         case HEARTRATEVAL:
           Serial.println(radar.heart_rate, DEC);
           heartRateChar.writeValue(radar.heart_rate);
+          break;
+        case BREATHVAL: // Added case for breath rate
+          Serial.println(radar.breath_rate, DEC);
+          breathRateChar.writeValue(radar.breath_rate);
           break;
       }
     }
