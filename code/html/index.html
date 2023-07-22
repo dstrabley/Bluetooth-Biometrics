@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Heart Rate Monitor</title>
+  </head>
+  <body>
+    <button id="pairButton">Pair with Heart Rate Monitor</button>
+    <p id="heartRateDisplay">No data yet.</p>
+
+    <script>
+      document.querySelector('#pairButton').addEventListener('click', function() {
+        if (!navigator.bluetooth) {
+          console.log('Web Bluetooth is not available!');
+          return;
+        }
+
+        let myServiceUUID = '19b10000-e8f2-537e-4f6c-d104768a1214';
+        let myCharacteristicUUID = '19b10001-e8f2-537e-4f6c-d104768a1214';
+
+        console.log('Requesting Bluetooth Device...');
+        navigator.bluetooth.requestDevice({
+          filters: [{services: [myServiceUUID]}]
+        })
+        .then(device => {
+          console.log('Connecting to GATT Server...');
+          return device.gatt.connect();
+        })
+        .then(server => {
+          console.log('Getting Service...');
+          return server.getPrimaryService(myServiceUUID);
+        })
+        .then(service => {
+          console.log('Getting Characteristic...');
+          return service.getCharacteristic(myCharacteristicUUID);
+        })
+        .then(characteristic => {
+          console.log('Reading Characteristic...');
+          characteristic.startNotifications();
+          characteristic.addEventListener('characteristicvaluechanged', (event) => {
+            let heartRate = event.target.value.getInt8(0);
+            document.querySelector('#heartRateDisplay').textContent = `Heart Rate: ${heartRate}`;
+          });
+        })
+        .catch(error => {
+          console.log('Error: ' + error);
+        });
+      });
+    </script>
+  </body>
+</html>
