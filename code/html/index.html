@@ -45,6 +45,7 @@
         overflow: auto;
         white-space: pre-wrap;
         height: 150px;
+        resize: vertical;
       }
       .bi {
         font-size: 28px;
@@ -141,15 +142,22 @@
     <footer class="text-xs text-center text-gray-700 p-4 mt-8" style="margin-top:10px;">
       <p class="font-bold" style="margin-bottom:4px">It should go without saying, but this is nowhere near a real medical device...</p>
       <p>This project was written using 
-        <a class="text-blue-500 hover:text-blue-700 underline" href="https://chat.openai.com/">chatGPT</a> / 
-        <a class="text-blue-500 hover:text-blue-700 underline" href="https://tailwindui.com/">TailwindUI</a> / and 
-        <a class="text-blue-500 hover:text-blue-700 underline" href="https://gionkunz.github.io/chartist-js/">Chartist.js</a>
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://chat.openai.com/" target="_blank">chatGPT</a> / 
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://tailwindui.com/" target="_blank">TailwindUI</a> / and 
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://gionkunz.github.io/chartist-js/" target="_blank">Chartist.js</a>
         with hardware from 
-        <a class="text-blue-500 hover:text-blue-700 underline" href="https://store-usa.arduino.cc/products/arduino-nano-33-iot">Arduino</a> and 
-        <a class="text-blue-500 hover:text-blue-700 underline" href="https://www.seeedstudio.com/60GHz-mmWave-Radar-Sensor-Breathing-and-Heartbeat-Module-p-5305.html">SeeedStudio</a>.
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://store-usa.arduino.cc/products/arduino-nano-33-iot" target="_blank">Arduino</a> and 
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://www.seeedstudio.com/60GHz-mmWave-Radar-Sensor-Breathing-and-Heartbeat-Module-p-5305.html" target="_blank"1>SeeedStudio</a>.
       </p>
     </footer>
     <script>
+
+      document.addEventListener("DOMContentLoaded", function() {
+        console.log("biometrics.danielstrabley.com");
+        console.log("");
+        console.log("NOTE: While this sensor does some cool things, it also has a handful of flaws. Most notably, if there are multiple people around, the sensor will generate results based on everybody and things get weird. Also if it ever gets stuck or is not working correctly, just hit it with a stick - or power cycle the board and it should fix things.");
+        console.log("");
+      });
       // When the user clicks on the "Understood" button, close the modal
       document.getElementById('modalButton').addEventListener('click', function() {
         document.getElementById('myModal').style.display = "none";
