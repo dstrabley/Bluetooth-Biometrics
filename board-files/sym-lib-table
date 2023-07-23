@@ -1,0 +1,6 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "strabley-human-presence-board")(type "Legacy")(uri "${KIPRJMOD}/biometrics.lib")(options "")(descr ""))
+  (lib (name "New_Library")(type "KiCad")(uri "${KIPRJMOD}/New_Library.kicad_sym")(options "")(descr ""))
+  (lib (name "Arduino-nano-33")(type "Legacy")(uri "/Users/dstrabley/Projects/Personal/Human Presence/Nano_33-master/lib/Arduino-nano-33.lib")(options "")(descr ""))
+)
