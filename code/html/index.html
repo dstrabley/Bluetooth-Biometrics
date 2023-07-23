@@ -39,7 +39,7 @@
         opacity: .75;
         overflow: auto;
         white-space: pre-wrap;
-        height: 150px;
+        height: 200px;
         resize: vertical;
       }
       .bi {
@@ -52,6 +52,21 @@
         height:15px;
         margin-right:15px;
         width:15px;
+      }
+      #console-container {
+        position: relative;
+      }
+      #console-container a {
+        background: #0000004D;
+        border-radius: 0 5px;
+        padding:5px 5px 5px 10px;
+        position: absolute;
+        right:0;
+        top:10px;
+        z-index:10;
+      }
+      #console-container i {
+        font-size:18px;
       }
     </style>
   </head>
@@ -129,7 +144,8 @@
                   </div>
               </div>
           </div>
-        <div>
+        <div id="console-container">
+          <a id="exportlog" class="text-white"><i class="bi bi-download"></i></a>
           <p id="consoleLog" class="text-sm text-gray-500"></p>
         </div>
       </div>
@@ -148,15 +164,29 @@
       </p>
     </footer>
     <script>
+      // Epxort the console log
+      let downloadLink = document.getElementById('exportlog');
+        downloadLink.addEventListener('click', function() {
+          let consoleLogText = document.getElementById('consoleLog').innerText;
+          let textBlob = new Blob([consoleLogText], { type: 'text/plain' });
+          let url = URL.createObjectURL(textBlob);
+          downloadLink.download = 'biometrics-log.txt';
+          downloadLink.href = url;
+        });
+      // Write message to console log
       document.addEventListener("DOMContentLoaded", function() {
+        let timestamp = new Date()
+        console.log(timestamp);
         console.log("biometrics.danielstrabley.com");
         console.log("");
         console.log("NOTE: While this sensor does some cool things, it also has a handful of flaws. Most notably, if there are multiple people around, the sensor will generate results based on everybody in the room and then things get weird... ceiling fans seem to mess with it to.  But, if it ever gets stuck or is not working correctly, just hit it with a stick - or power cycle the board and it should fix things.");
         console.log("");
       });
+      // Modal trigger
       document.getElementById('modalButton').addEventListener('click', function() {
         document.getElementById('myModal').style.display = "none";
       });
+      // Print to console Log
       let originalLog = console.log;
       console.log = function(message) {
         originalLog(message);
@@ -164,6 +194,7 @@
         consoleLogParagraph.innerText += `${message}\n`;
         consoleLogParagraph.scrollTop = consoleLogParagraph.scrollHeight;
       };
+      // Chartist
       var chart = new Chartist.Line('.ct-chart', {
         series: [
           [0], // Heart Rate
@@ -185,6 +216,7 @@
           high: 120,
         },
       });
+      // Bluetooth Actions
       var device, server, heartRateCharacteristic, breathRateCharacteristic, distanceCharacteristic;
       var pairButton = document.querySelector('#pairButton');
       pairButton.addEventListener('click', function() {
@@ -240,13 +272,16 @@
           console.log('Error: ' + error);
           pairButton.textContent = "Connect to Sensor";
         });
-
+        // Print Characteristics
         function startNotifications() {
           console.log('Reading Heart Rate Characteristic...');
           heartRateCharacteristic.startNotifications();
           heartRateCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
             let heartRate = event.target.value.getUint8(0);
             document.querySelector('#heartRateDisplay').textContent = `${heartRate} BPM`;
+            let timestamp = new Date()
+            let time = timestamp.getHours() + ":" + timestamp.getMinutes() + ":" + timestamp.getSeconds();
+            console.log(time + ': ' + heartRate + ' BPM');
             var data = chart.data.series[0];
             data.push(heartRate);
             if (data.length > 50) data.shift();
@@ -257,7 +292,10 @@
           breathRateCharacteristic.startNotifications();
           breathRateCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
             let breathRate = event.target.value.getUint8(0);
+            let timestamp = new Date()
+            let time = timestamp.getHours() + ":" + timestamp.getMinutes() + ":" + timestamp.getSeconds();  
             document.querySelector('#breathRateDisplay').textContent = `${breathRate} RR`;
+            console.log( time +': ' + breathRate + ' RR');
             var data = chart.data.series[1];
             data.push(breathRate);
             if (data.length > 50) data.shift();
@@ -265,6 +303,7 @@
             updateLastReadingTime();
           });
           console.log('Reading Distance Characteristic...');
+          console.log('');
           distanceCharacteristic.startNotifications();
           distanceCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
             let distance = event.target.value.getUint8(0);
@@ -277,6 +316,7 @@
           });
           pairButton.textContent = "Disconnect from Sensor";
         }
+        // Last Updated Time
         function updateLastReadingTime() {
           let now = new Date();
           let hours = now.getHours();
