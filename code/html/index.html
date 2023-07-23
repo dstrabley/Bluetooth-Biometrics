@@ -236,7 +236,7 @@
             console.log('');
             console.log(getTimeStamp() + ' Disconnecting from GATT Server...');
             device.gatt.disconnect();
-              console.log(getTimeStamp() + ' Disconnected from GATT Server');
+              console.log(getTimeStamp() + ' Disconnected from GATT Server...');
             pairButton.textContent = "Connect to Sensor";
           }
           return;
@@ -319,7 +319,7 @@
             chart.update();
             updateLastReadingTime();
           });
-          pairButton.textContent = "Disconnect from Sensor...";
+          pairButton.textContent = "Disconnect from Sensor";
         }
         // Last Updated Time
         function updateLastReadingTime() {
