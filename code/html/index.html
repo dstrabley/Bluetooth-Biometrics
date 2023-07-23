@@ -164,6 +164,14 @@
       </p>
     </footer>
     <script>
+      // Timestamp Function
+      function getTimeStamp() {
+        let timestamp = new Date();
+        let hours = timestamp.getHours().toString().padStart(2, '0');
+        let minutes = timestamp.getMinutes().toString().padStart(2, '0');
+        let seconds = timestamp.getSeconds().toString().padStart(2, '0');
+        return hours + ":" + minutes + ":" + seconds;
+      }
       // Epxort the console log
       let downloadLink = document.getElementById('exportlog');
         downloadLink.addEventListener('click', function() {
@@ -177,10 +185,9 @@
       document.addEventListener("DOMContentLoaded", function() {
         let timestamp = new Date()
         console.log(timestamp);
-        console.log("biometrics.danielstrabley.com");
-        console.log("");
-        console.log("NOTE: While this sensor does some cool things, it also has a handful of flaws. Most notably, if there are multiple people around, the sensor will generate results based on everybody in the room and then things get weird... ceiling fans seem to mess with it to.  But, if it ever gets stuck or is not working correctly, just hit it with a stick - or power cycle the board and it should fix things.");
-        console.log("");
+        console.log('biometrics.danielstrabley.com');
+        console.log('');
+        console.log('NOTE: While this sensor does some cool things, it also has a handful of flaws. Most notably, if there are multiple people around, the sensor will generate results based on everybody in the room and then things get weird... ceiling fans seem to mess with it to.  But, if it ever gets stuck or is not working correctly, just hit it with a stick - or power cycle the board and it should fix things.');
       });
       // Modal trigger
       document.getElementById('modalButton').addEventListener('click', function() {
@@ -221,14 +228,15 @@
       var pairButton = document.querySelector('#pairButton');
       pairButton.addEventListener('click', function() {
         if (!navigator.bluetooth) {
-          console.log('Web Bluetooth is not available!');
+          console.log(getTimeStamp() + ' Web Bluetooth is not available!');
           return;
         }
         if (pairButton.textContent === "Disconnect from Sensor") {
           if (device) {
-            console.log('Disconnecting from GATT Server...');
+            console.log('');
+            console.log(getTimeStamp() + ' Disconnecting from GATT Server...');
             device.gatt.disconnect();
-            console.log('Disconnected from GATT Server');
+              console.log(getTimeStamp() + ' Disconnected from GATT Server');
             pairButton.textContent = "Connect to Sensor";
           }
           return;
@@ -237,33 +245,34 @@
         let myHeartRateCharacteristicUUID = '19b10001-e8f2-537e-4f6c-d104768a1214';
         let myBreathRateCharacteristicUUID = '19b10002-e8f2-537e-4f6c-d104768a1214';
         let myDistanceCharacteristicUUID = '19b10003-e8f2-537e-4f6c-d104768a1214';
-        console.log('Requesting Bluetooth Device...');
+        console.log('');
+        console.log(getTimeStamp() + ' Requesting Bluetooth Device...');
         navigator.bluetooth.requestDevice({
           filters: [{
             services: [myServiceUUID]
           }]
         }).then(dev => {
           device = dev;
-          console.log('Connecting to GATT Server...');
+          console.log(getTimeStamp() + ' Connecting to GATT Server...');
           return device.gatt.connect();
         }).then(serv => {
           server = serv;
-          console.log('Getting Service...');
+          console.log(getTimeStamp() + ' Getting Service...');
           return server.getPrimaryService(myServiceUUID);
         }).then(service => {
-          console.log('Getting Heart Rate Characteristic...');
+          console.log(getTimeStamp() + ' Getting Heart Rate Characteristic...');
           return service.getCharacteristic(myHeartRateCharacteristicUUID).then(char => {
             heartRateCharacteristic = char;
             return service;
           });
         }).then(service => {
-          console.log('Getting Breath Rate Characteristic...');
+          console.log(getTimeStamp() + ' Getting Breath Rate Characteristic...');
           return service.getCharacteristic(myBreathRateCharacteristicUUID).then(char => {
             breathRateCharacteristic = char;
             return service;
           });
         }).then(service => {
-          console.log('Getting Distance Characteristic...');
+          console.log(getTimeStamp() + ' Getting Distance Characteristic...');
           return service.getCharacteristic(myDistanceCharacteristicUUID).then(char => {
             distanceCharacteristic = char;
             return startNotifications();
@@ -274,35 +283,31 @@
         });
         // Print Characteristics
         function startNotifications() {
-          console.log('Reading Heart Rate Characteristic...');
+          console.log(getTimeStamp() + ' Reading Heart Rate Characteristic...');
           heartRateCharacteristic.startNotifications();
           heartRateCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
             let heartRate = event.target.value.getUint8(0);
             document.querySelector('#heartRateDisplay').textContent = `${heartRate} BPM`;
-            let timestamp = new Date()
-            let time = timestamp.getHours() + ":" + timestamp.getMinutes() + ":" + timestamp.getSeconds();
-            console.log(time + ': ' + heartRate + ' BPM');
+            console.log(getTimeStamp() + ': Your current heart rate:         ' + heartRate + '(BPM)');
             var data = chart.data.series[0];
             data.push(heartRate);
             if (data.length > 50) data.shift();
             chart.update();
             updateLastReadingTime();
           });
-          console.log('Reading Breath Rate Characteristic...');
+          console.log(getTimeStamp() + ' Reading Breath Rate Characteristic...');
           breathRateCharacteristic.startNotifications();
           breathRateCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
-            let breathRate = event.target.value.getUint8(0);
-            let timestamp = new Date()
-            let time = timestamp.getHours() + ":" + timestamp.getMinutes() + ":" + timestamp.getSeconds();  
+            let breathRate = event.target.value.getUint8(0); 
             document.querySelector('#breathRateDisplay').textContent = `${breathRate} RR`;
-            console.log( time +': ' + breathRate + ' RR');
+            console.log( getTimeStamp() +': Your current respiratory rate:   ' + breathRate + '(RR)');
             var data = chart.data.series[1];
             data.push(breathRate);
             if (data.length > 50) data.shift();
             chart.update();
             updateLastReadingTime();
           });
-          console.log('Reading Distance Characteristic...');
+          console.log(getTimeStamp() + ' Reading Distance Characteristic...');
           console.log('');
           distanceCharacteristic.startNotifications();
           distanceCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
