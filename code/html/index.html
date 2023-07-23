@@ -56,7 +56,6 @@
     </style>
   </head>
   <body class="bg-gray-100 p-6">
-    <!-- The modal -->
     <div id="myModal" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
@@ -75,7 +74,6 @@
               </div>
             </div>
           </div>
-          
           <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button id="modalButton" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"> Yeah, I get it. </button>
           </div>
@@ -140,8 +138,9 @@
       <p class="font-bold" style="margin-bottom:4px">It should go without saying, but this is nowhere near a real medical device...</p>
       <p>This project was written using 
         <a class="text-blue-500 hover:text-blue-700 underline" href="https://chat.openai.com/" target="_blank">chatGPT</a> / 
-        <a class="text-blue-500 hover:text-blue-700 underline" href="https://tailwindui.com/" target="_blank">TailwindUI</a> / and 
-        <a class="text-blue-500 hover:text-blue-700 underline" href="https://gionkunz.github.io/chartist-js/" target="_blank">Chartist.js</a>
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://tailwindui.com/" target="_blank">TailwindUI</a> /  
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://gionkunz.github.io/chartist-js/" target="_blank">Chartist.js</a> and hosted on
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://github.com/dstrabley/Bluetooth-Biometrics" target="_blank">Github</a>
         with hardware from 
         <a class="text-blue-500 hover:text-blue-700 underline" href="https://store-usa.arduino.cc/products/arduino-nano-33-iot" target="_blank">Arduino</a> / 
         <a class="text-blue-500 hover:text-blue-700 underline" href="https://www.seeedstudio.com/60GHz-mmWave-Radar-Sensor-Breathing-and-Heartbeat-Module-p-5305.html" target="_blank"1>SeeedStudio</a> and 
@@ -149,24 +148,20 @@
       </p>
     </footer>
     <script>
-
       document.addEventListener("DOMContentLoaded", function() {
         console.log("biometrics.danielstrabley.com");
         console.log("");
         console.log("NOTE: While this sensor does some cool things, it also has a handful of flaws. Most notably, if there are multiple people around, the sensor will generate results based on everybody in the room and then things get weird... ceiling fans seem to mess with it to.  But, if it ever gets stuck or is not working correctly, just hit it with a stick - or power cycle the board and it should fix things.");
         console.log("");
       });
-      // When the user clicks on the "Understood" button, close the modal
       document.getElementById('modalButton').addEventListener('click', function() {
         document.getElementById('myModal').style.display = "none";
       });
-      // Override console.log to display on the page
       let originalLog = console.log;
       console.log = function(message) {
         originalLog(message);
         let consoleLogParagraph = document.getElementById('consoleLog');
         consoleLogParagraph.innerText += `${message}\n`;
-        // Scroll to the bottom of the log
         consoleLogParagraph.scrollTop = consoleLogParagraph.scrollHeight;
       };
       var chart = new Chartist.Line('.ct-chart', {
@@ -252,10 +247,8 @@
           heartRateCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
             let heartRate = event.target.value.getUint8(0);
             document.querySelector('#heartRateDisplay').textContent = `${heartRate} BPM`;
-            // Add new heart rate value to chart and update
             var data = chart.data.series[0];
             data.push(heartRate);
-            // Keep only the last 50 data points
             if (data.length > 50) data.shift();
             chart.update();
             updateLastReadingTime();
@@ -265,10 +258,8 @@
           breathRateCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
             let breathRate = event.target.value.getUint8(0);
             document.querySelector('#breathRateDisplay').textContent = `${breathRate} RR`;
-            // Add new breath rate value to chart and update
             var data = chart.data.series[1];
             data.push(breathRate);
-            // Keep only the last 50 data points
             if (data.length > 50) data.shift();
             chart.update();
             updateLastReadingTime();
@@ -278,19 +269,14 @@
           distanceCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
             let distance = event.target.value.getUint8(0);
             document.querySelector('#distanceDisplay').textContent = `${distance} in`;
-            
-            // Add new distance value to chart and update
-            var data = chart.data.series[2]; // Index 2 for the third series (0-indexed)
+            var data = chart.data.series[2]; 
             data.push(distance);
-            // Keep only the last 50 data points
             if (data.length > 50) data.shift();
             chart.update();
-            
             updateLastReadingTime();
           });
           pairButton.textContent = "Disconnect from Sensor";
         }
-
         function updateLastReadingTime() {
           let now = new Date();
           let hours = now.getHours();
