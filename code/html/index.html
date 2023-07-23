@@ -13,27 +13,22 @@
       .ct-series-c .ct-point {
         stroke-width: 0px;
       }
-
       .ct-series-a .ct-line {
         stroke: #ff3b30;
         stroke-width: 3px;
       }
-
       .ct-series-b .ct-line {
         stroke: #007aff;
         stroke-width: 3px;
       }
-
       .ct-series-c .ct-line {
-        stroke: #fecb2e9;
+        stroke: #fecb2e;
         stroke-width: 2px;
         stroke-dasharray: 8;
       }
-
       .ct-chart-container {
         width: 100%;
       }
-
       #consoleLog {
         color: #33FF00;
         background-color: #000000;
@@ -97,7 +92,7 @@
           <div class="grid grid-cols-4 gap-4">
               <div class="col-span-1">
                   <div class="bg-white rounded shadow p-4 flex items-center space-x-2 text-gray-500">
-                      <i class="bi bi-activity"></i>
+                      <i class="bi bi-activity" style="color:#ff3b30;"></i>
                       <div>
                           <h1 class="text-xl font-bold text-gray-700" id="heartRateDisplay">N/A</h1>
                           <p class="text-xs">Heart Rate</p>
@@ -106,7 +101,7 @@
               </div>
               <div class="col-span-1">
                   <div class="bg-white rounded shadow p-4 flex items-center space-x-2 text-gray-500">
-                      <i class="bi bi-lungs"></i>
+                      <i class="bi bi-lungs" style="color:#007aff;"></i>
                       <div>
                           <h1 class="text-xl font-bold text-gray-700" id="breathRateDisplay">N/A</h1>
                           <p class="text-xs">Respiratory Rate</p>
@@ -115,7 +110,7 @@
               </div>
               <div class="col-span-1">
                   <div class="bg-white rounded shadow p-4 flex items-center space-x-2 text-gray-500">
-                      <i class="bi bi-arrows-expand"></i>
+                      <i class="bi bi-arrows-expand" style="color:#fecb2e"></i>
                       <div>
                           <h1 class="text-xl font-bold text-gray-700" id="distanceDisplay">N/A</h1>
                           <p class="text-xs">Distance from Sensor</p>
@@ -131,10 +126,8 @@
                       </div>
                   </div>
               </div>
-          </div>
-      
-      
-        <div class="">
+          </div>\
+        <div>
           <p id="consoleLog" class="text-sm text-gray-500"></p>
         </div>
       </div>
@@ -245,7 +238,7 @@
           });
         }).catch(error => {
           console.log('Error: ' + error);
-          pairButton.textContent = "Connect with Heart Rate Monitor";
+          pairButton.textContent = "Connect to Sensor";
         });
 
         function startNotifications() {
