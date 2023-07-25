@@ -15,13 +15,21 @@ void setup() {
   Serial.begin(115200);
   Serial1.begin(115200);
 
-  while(!Serial);
+  //while(!Serial);
 
   Serial.println("Ready");
 
-  if (!BLE.begin()) {
-    Serial.println("starting BLE failed!");
-    while (1);
+  int attempts = 0;
+  while (!BLE.begin()) {
+    attempts++;
+    Serial.println("starting BLE failed! Attempt: " + String(attempts));
+
+    if (attempts >= 3) { // After 3 failed attempts, perform a system reset.
+      delay(5000); // Wait for 5 seconds before resetting.
+      NVIC_SystemReset(); // Reset the system.
+    }
+
+    delay(1000); // Wait for a second before trying again.
   }
 
   BLE.setLocalName("Heart Rate Monitor");
