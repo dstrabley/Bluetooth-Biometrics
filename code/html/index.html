@@ -6,6 +6,7 @@
     <script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/jetbrains-mono-2" rel="stylesheet">
     <link rel="icon" href="https://www.danielstrabley.com/wp-content/uploads/2022/09/favicon.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Biometric data visualization dashboard.">
@@ -17,7 +18,7 @@
         stroke-width: 0px;
       }
       .ct-series-a .ct-line {
-        stroke: #ff3b30;
+        stroke: #FE6666;
         stroke-width: 3px;
       }
       .ct-series-b .ct-line {
@@ -25,7 +26,7 @@
         stroke-width: 3px;
       }
       .ct-series-c .ct-line {
-        stroke: #fecb2e;
+        stroke: #FECB6C;
         stroke-width: 2px;
         stroke-dasharray: 8;
       }
@@ -33,13 +34,14 @@
         width: 100%;
       }
       #consoleLog {
-        color: #33FF00;
-        background-color: #000000;
-        font-family: 'Courier New', Courier, monospace;
+        color: #A5E844;
+        background-color: #2B3440;
+        font-family: 'JetBrains Mono', sans-serif;
+        font-family: 'JetBrains Mono NL', sans-serif;
+        font-size: 13px;
         padding: 20px;
         border-radius: 5px;
         margin-top: 10px;
-        opacity: .75;
         overflow: auto;
         white-space: pre-wrap;
         height: 200px;
@@ -152,7 +154,7 @@
           </div>
         </div>        
         <div id="console-container">
-          <a id="exportlog" class="text-white"><i class="bi bi-download"></i></a>
+          <a id="exportlog" class="text-white" style="cursor:pointer;"><i class="bi bi-download"></i></a>
           <p id="consoleLog" class="text-sm text-gray-500"></p>
         </div>
       </div>
