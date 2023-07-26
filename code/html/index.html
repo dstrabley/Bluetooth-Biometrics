@@ -73,6 +73,17 @@
       #console-container i {
         font-size:18px;
       }
+      #modal label {
+        font-weight: bold;
+      }
+      #modal p {
+        margin-bottom:15px;
+      }
+
+      #modal button:disabled {
+        opacity:.5;
+        cursor:default;
+      }
     </style>
   </head>
   <body class="bg-gray-100 p-6">
@@ -94,12 +105,62 @@
               </div>
             </div>
           </div>
-          <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <div class=" px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button id="modalButton" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"> Yeah, I get it. </button>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="fixed z-10 inset-0 overflow-y-auto" id="modal" style="display:none;">
+      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="sm:w-1/12 text-center sm:text-left">
+                <i class="bi bi-regex" style="font-size: 40px;position: relative;top: -8px;"></i>
+              </div>
+              <div class="sm:w-11/12 mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Wanna use your own UUIDs?</h3>
+                <div class="mt-2">
+                  <form id="uuidForm">
+                    <p class="text-sm text-gray-600">This is a beta feature... so it could be buggy. BUT if you're using the code from the github repo <strong>and</strong> you change the UUIDs <strong>and</strong> you want to use this site to test with... then brother, I got you covered.
+                    </p>
+                    <p class="text-sm text-gray-600">
+                      <label for="serviceUUID">Service UUID:</label><br>
+                      <input required type="text" id="serviceUUID" name="serviceUUID" class="border-2 border-gray-200 rounded p-1 w-full"><br>
+                    </p>
+                    <p class="text-sm text-gray-600">
+                      <label for="heartRateUUID">Heart Rate Characteristic UUID:</label><br>
+                      <input required type="text" id="heartRateUUID" name="heartRateUUID" class="border-2 border-gray-200 rounded p-1 w-full"><br>
+                    </p>
+                    <p class="text-sm text-gray-600">
+                      <label for="breathRateUUID">Breath Rate Characteristic UUID:</label><br>
+                      <input required type="text" id="breathRateUUID" name="breathRateUUID" class="border-2 border-gray-200 rounded p-1 w-full"><br>
+                    </p>
+                    <p class="text-sm text-gray-600">
+                      <label for="distanceUUID">Distance Characteristic UUID:</label><br>
+                      <input required type="text" id="distanceUUID" name="distanceUUID" class="border-2 border-gray-200 rounded p-1 w-full"><br>
+                    </p>
+                    <div class="mt-4 flex justify-end" style="margin-top:20px">
+                      <button type="submit" class="w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onclick="document.getElementById('modal').style.display = 'none'">Update UUIDs</button>
+                      <button type="button" class="w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-black bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm" onclick="document.getElementById('modal').style.display = 'none'">Nah, cancel this</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+          
+          
+   
     <div class="container mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center justify-between mb-6">
         <div>
@@ -107,6 +168,8 @@
         </div>
         <div class="flex justify-end">
           <button id="pairButton" class="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Connect to Sensor</button>
+          <button class="w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-black bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm" onclick="document.getElementById('modal').style.display = 'block'"><i class="bi bi-gear" style="margin:0; font-size:22px"></i></button>
+
         </div>
       </div>          
       <div class="container mx-auto grid grid-cols-1 gap-4">
@@ -164,7 +227,8 @@
       <p>This project was written using 
         <a class="text-blue-500 hover:text-blue-700 underline" href="https://chat.openai.com/" target="_blank">chatGPT</a> / 
         <a class="text-blue-500 hover:text-blue-700 underline" href="https://tailwindui.com/" target="_blank">TailwindUI</a> /  
-        <a class="text-blue-500 hover:text-blue-700 underline" href="https://gionkunz.github.io/chartist-js/" target="_blank">Chartist.js</a> and hosted on
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://icons.getbootstrap.com/" target="_blank">Bootstrap Icons</a> /  
+        <a class="text-blue-500 hover:text-blue-700 underline" href="https://gionkunz.github.io/chartist-js/" target="_blank">Chartist.js</a>, hosted on
         <a class="text-blue-500 hover:text-blue-700 underline" href="https://github.com/dstrabley/Bluetooth-Biometrics" target="_blank">Github</a>
         with hardware from 
         <a class="text-blue-500 hover:text-blue-700 underline" href="https://store-usa.arduino.cc/products/arduino-nano-33-iot" target="_blank">Arduino</a> / 
@@ -203,6 +267,25 @@
       document.getElementById('modalButton').addEventListener('click', function() {
         document.getElementById('myModal').style.display = "none";
       });
+      // UUID required form fields
+      window.onload = function () {
+        var form = document.getElementById('uuidForm');
+        var inputs = form.querySelectorAll('input[required]');
+        var submitButton = form.querySelector('button[type="submit"]');
+
+        function checkFormValidity() {
+          var allFilled = Array.from(inputs).every(input => input.value !== '');
+          submitButton.disabled = !allFilled;
+        }
+
+        inputs.forEach(input => {
+          input.addEventListener('input', checkFormValidity);
+        });
+
+        // Initial check in case form is pre-filled
+        checkFormValidity();
+      }
+
       // Print to console Log
       let originalLog = console.log;
       console.log = function(message) {
@@ -236,6 +319,25 @@
       // Bluetooth Actions
       var device, server, heartRateCharacteristic, breathRateCharacteristic, distanceCharacteristic;
       var pairButton = document.querySelector('#pairButton');
+      var serviceUUIDInput = document.querySelector('#serviceUUID');
+      var heartRateUUIDInput = document.querySelector('#heartRateUUID');
+      var breathRateUUIDInput = document.querySelector('#breathRateUUID');
+      var distanceUUIDInput = document.querySelector('#distanceUUID');
+
+      var myServiceUUID = '19b10000-e8f2-537e-4f6c-d104768a1214';
+      var myHeartRateCharacteristicUUID = '19b10001-e8f2-537e-4f6c-d104768a1214';
+      var myBreathRateCharacteristicUUID = '19b10002-e8f2-537e-4f6c-d104768a1214';
+      var myDistanceCharacteristicUUID = '19b10003-e8f2-537e-4f6c-d104768a1214';
+
+      document.querySelector('#uuidForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        myServiceUUID = serviceUUIDInput.value;
+        myHeartRateCharacteristicUUID = heartRateUUIDInput.value;
+        myBreathRateCharacteristicUUID = breathRateUUIDInput.value;
+        myDistanceCharacteristicUUID = distanceUUIDInput.value;
+        pairButton.textContent = "Connect to Sensor";
+      });
+
       pairButton.addEventListener('click', function() {
         if (!navigator.bluetooth) {
           console.log('');
@@ -252,10 +354,7 @@
           }
           return;
         }
-        let myServiceUUID = '19b10000-e8f2-537e-4f6c-d104768a1214';
-        let myHeartRateCharacteristicUUID = '19b10001-e8f2-537e-4f6c-d104768a1214';
-        let myBreathRateCharacteristicUUID = '19b10002-e8f2-537e-4f6c-d104768a1214';
-        let myDistanceCharacteristicUUID = '19b10003-e8f2-537e-4f6c-d104768a1214';
+
         console.log('');
         console.log(getTimeStamp() + ' Requesting Bluetooth Device...');
         navigator.bluetooth.requestDevice({
@@ -292,7 +391,7 @@
           console.log('Error: ' + error);
           pairButton.textContent = "Connect to Sensor";
         });
-        // Print Characteristics
+
         function startNotifications() {
           console.log(getTimeStamp() + ' Reading Heart Rate Characteristic...');
           heartRateCharacteristic.startNotifications();
@@ -332,7 +431,7 @@
           });
           pairButton.textContent = "Disconnect from Sensor";
         }
-        // Last Updated Time
+
         function updateLastReadingTime() {
           let now = new Date();
           let hours = now.getHours();
